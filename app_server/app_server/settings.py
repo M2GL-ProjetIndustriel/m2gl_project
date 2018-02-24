@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 
-    'experiments.apps.ExperimentsConfig', # experiments app added.
+    'api.apps.ApiConfig', # experiments app added.
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
