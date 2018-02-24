@@ -16,5 +16,5 @@ class Instance(models.Model):
 class Solver(models.Model):
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=100, blank=True)
-    source_path = models.CharField(max_length=200, blank=True) # temporary until we find a better way of handleing files.
-    executable_path = models.CharField(max_length=200, blank=True) # temporary until we find a better way of handleing files.
+    source_path = models.CharField(max_length=200, blank=True) # temporary until we find a better way of handling files.
+    executable_path = models.CharField(max_length=200, blank=True) # temporary until we find a better way of handling files.
