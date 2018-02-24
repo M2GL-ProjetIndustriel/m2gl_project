@@ -23,6 +23,7 @@ class Experimentation(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
     solver_parameters = models.CharField(max_length=200)
+    solver = models.ForeignKey(Solver, blank=True)
     device_info = models.CharField(max_length=200, blank=True)
 
 class Result(models.Model):
