@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
-from experiments.serializers import InstanceSerializer
-from experiments.models import Instance
+from api.serializers import InstanceSerializer
+from api.models import Instance
 from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the experiments index.")
+    return HttpResponse("Hello, world. You're at the api index.")
 
 # API views
 

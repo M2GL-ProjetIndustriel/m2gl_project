@@ -1,6 +1,6 @@
 from django.urls import path
-from experiments.views import InstanceList, InstanceDetail
-from experiments import views
+from api.views import InstanceList, InstanceDetail
+from api import views
 
 urlpatterns = [
     path('', views.index, name='index'),

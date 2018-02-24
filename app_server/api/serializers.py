@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from experiments.models import Instance_feature, Instance
+from api.models import Instance_feature, Instance
 
 class InstanceSerializer(serializers.ModelSerializer):
     class Meta:
