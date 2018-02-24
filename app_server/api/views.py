@@ -54,3 +54,21 @@ class InstanceDetail(APIView):
         instance = get_object_or_404(Instance, pk=pk)
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@permission_classes((permissions.AllowAny,))
+class SolverList(APIView):
+    """
+    List all solvers, or create a new solver.
+    """
+
+    def get(self, request, format=None):
+        solvers = Solver.objects.all()
+        serializer = SolverSerializer(solvers, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = SolverSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
