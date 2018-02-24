@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from api.serializers import InstanceSerializer
-from api.models import Instance
+from api.models import Instance, Solver, Experimentation
 from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Instance_feature, Instance, Solver
+from api.models import Instance_feature, Instance, Solver, Experimentation
 
 class InstanceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +30,27 @@ class SolverSerializer(serializers.ModelSerializer):
         solver.path = validated_data.get('path', solver.path)
         solver.save()
         return solver
+
+
+class ExperimentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experimentation
+        fields = ('id', 'name', 'date', 'solver_parameters', 'solver',
+            'device_info')
+
+    # vvv Inutile?
+    """
+    def create(self, validated_data):
+        return experimentation.objects.create(**validated_data)
+
+    def update(self, solver, validated_data):
+        experimentation.name = validated_data.get('name', experimentation.name)
+        experimentation.date = validated_data.get('date', experimentation.date)
+        experimentation.solver_parameters = validated_data.get('solver_parameters',
+            experimentation.solver_parameters)
+        experimentation.solver = validated_data.get('solver', experimentation.solver)
+        experimentation.device_info = validated_data.get('device_info',
+            experimentation.device_info)
+        experimentation.save()
+        return experimentation
+    """

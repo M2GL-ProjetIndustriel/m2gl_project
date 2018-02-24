@@ -19,11 +19,12 @@ class Solver(models.Model):
     source_path = models.CharField(max_length=200, blank=True) # temporary until we find a better way of handling files.
     executable_path = models.CharField(max_length=200, blank=True) # temporary until we find a better way of handling files.
 
+#TODO add User
 class Experimentation(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
     solver_parameters = models.CharField(max_length=200)
-    solver = models.ForeignKey(Solver, blank=True)
+    solver = models.ForeignKey(Solver, on_delete=models.CASCADE)
     device_info = models.CharField(max_length=200, blank=True)
 
 class Result(models.Model):
