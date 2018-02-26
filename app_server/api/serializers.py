@@ -22,7 +22,7 @@ class SolverSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'version', 'source_path', 'executable_path')
 
     def create(self, validated_data):
-        return solver.objects.create(**validated_data)
+        return Solver.objects.create(**validated_data)
 
     def update(self, solver, validated_data):
         solver.name = validated_data.get('name', solver.name)
