@@ -11,7 +11,7 @@ class InstanceSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
-        instance.ptype = validated_data.get('ptype', instance.code)
+        instance.ptype = validated_data.get('ptype', instance.ptype)
         instance.path = validated_data.get('path', instance.path)
         instance.save()
         return instance
@@ -26,7 +26,7 @@ class SolverSerializer(serializers.ModelSerializer):
 
     def update(self, solver, validated_data):
         solver.name = validated_data.get('name', solver.name)
-        solver.ptype = validated_data.get('ptype', solver.code)
+        solver.ptype = validated_data.get('ptype', solver.ptype)
         solver.path = validated_data.get('path', solver.path)
         solver.save()
         return solver
