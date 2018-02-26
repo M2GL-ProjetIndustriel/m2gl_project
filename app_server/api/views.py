@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
-from api.serializers import InstanceSerializer
+from api.serializers import InstanceSerializer, SolverSerializer
 from api.models import Instance, Solver, Experimentation
 from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
