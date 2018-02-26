@@ -1,17 +1,19 @@
 from django.db import models
 
 # Create your models here.
-
-class Instance_feature(models.Model):
-    name = models.CharField(max_length=100)
-    value = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100, blank=True)
-
 class Instance(models.Model):
     name = models.CharField(max_length=100) # name of the problem ex: "100-queens"
     ptype = models.CharField(max_length=100) # type of problem. ex: "CSP" , "SAT" ...
     path = models.CharField(max_length=200, blank=True) # path to Instance file
-    features = models.ManyToManyField(Instance_feature, blank=True)
+
+class Instance_feature(models.Model):
+    name = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100, blank=True)
+
+class Instance_value(models.Model):
+    value = models.CharField(max_length=400)
+    instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
+    feature = models.ForeignKey(Instance_feature, on_delete=models.CASCADE)
 
 class Solver(models.Model):
     name = models.CharField(max_length=100)
@@ -33,6 +35,9 @@ class Result(models.Model):
 
 class Result_Measurement(models.Model):
     name = models.CharField(max_length=100)
-    value = models.DecimalField(max_digits=20, decimal_places=10)
     unit = models.CharField(max_length=100, blank=True)
+
+class Result_value(models.Model):
+    value = models.CharField(max_length=400)
     result = models.ForeignKey(Result, on_delete=models.CASCADE)
+    measurement = models.ForeignKey(Result_Measurement, on_delete=models.CASCADE)
