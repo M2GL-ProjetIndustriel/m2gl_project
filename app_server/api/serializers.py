@@ -26,8 +26,8 @@ class SolverSerializer(serializers.ModelSerializer):
 
     def update(self, solver, validated_data):
         solver.name = validated_data.get('name', solver.name)
-        solver.ptype = validated_data.get('ptype', solver.ptype)
-        solver.path = validated_data.get('path', solver.path)
+        solver.source_path = validated_data.get('source_path', solver.source_path)
+        solver.executable_path = validated_data.get('executable_path', solver.executable_path)
         solver.save()
         return solver
 
