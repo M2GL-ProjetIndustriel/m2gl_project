@@ -17,6 +17,7 @@ before_script:
   - psql -c "CREATE USER toto PASSWORD 'azert';" -U postgres
   - psql -c "ALTER USER toto CREATEDB;" -U postgres
   - psql -c "ALTER USER toto WITH SUPERUSER;" -U postgres
+  - cd app_server
 
 script:
   - python app_server/manage.py test
