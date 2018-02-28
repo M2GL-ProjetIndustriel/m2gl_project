@@ -24,6 +24,6 @@ before_script:
   - cd app_server
 
 script:
-  - python app_server/manage.py test
+  - python manage.py test
   - pytest
   - echo "Finished."
