@@ -77,7 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
 
-        'USER': 'postgres',
+        'USER': 'toto',
         # TODO: make it configurable (currently a leak :-) )
         'PASSWORD': 'azert',
 
@@ -123,7 +123,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'fr-FR'
 
-TIME_ZONE = 'UTC+01:00'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

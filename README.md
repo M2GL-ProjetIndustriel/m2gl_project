@@ -35,8 +35,9 @@ $ python app_server/manage.py runserver
     `$ pipenv shell`
 4. Install postgre [download here](https://www.openscg.com/bigsql/postgresql/installers.jsp/)    
 5. Setup postgre.
-        USER: postgres
+        USER: toto
         PASSWORD: azert
+        Rights: admin + createdb
         Create a table called 'experiments_db' and a table called 'experiements_test_db'
         The DB should be accessible on localhost:5432.
 
