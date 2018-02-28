@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/M2GL-ProjetIndustriel/m2gl_project/badge.svg?branch=master)](https://coveralls.io/github/M2GL-ProjetIndustriel/m2gl_project?branch=master)
 [![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/M2GL-ProjetIndustriel/m2gl_project)
 
-## Up and running
+## Up and running (Nix)
 
 - Install virtualenvwrapper.
 ```bash
@@ -23,3 +23,25 @@ pip install -r requirements.txt
 $ python app_server/manage.py runserver
 ```
 - **RTFM**
+
+## Windows  
+
+### Installation
+1. Create the env in a different directory.   
+    `$ pipenv --three`
+2. Install requirements.  
+    `$ pipenv install -r requirements.txt`
+3. Use the env  
+    `$ pipenv shell`
+4. Install postgre [download here](https://www.openscg.com/bigsql/postgresql/installers.jsp/)    
+5. Setup postgre.
+        USER: postgres
+        PASSWORD: azert
+        Create a table called 'experiments_db' and a table called 'experiements_test_db'
+        The DB should be accessible on localhost:5432.
+
+### Setup DB
+1. Create migration   
+    `$ python app_server/manage.py makemigrations api`
+2. Install migration  
+    `$ python app_server/manage.py migrate`
