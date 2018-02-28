@@ -37,7 +37,7 @@ $ python app_server/manage.py runserver
 5. Setup postgre.
         USER: toto
         PASSWORD: azert
-        Rights: admin + createdb
+        Rights: superuser + createdb
         Create a table called 'experiments_db' and a table called 'experiements_test_db'
         The DB should be accessible on localhost:5432.
 
