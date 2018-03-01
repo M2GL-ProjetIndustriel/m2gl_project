@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 # Create your models here.
@@ -22,10 +23,18 @@ class InstanceValue(models.Model):
 class Solver(models.Model):
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=100, blank=True)
-    added = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(null=True)
+    modified = models.DateTimeField(null=True)
     # temporary until we find a better way of handling files.
     source_path = models.CharField(max_length=200, blank=True)
     executable_path = models.CharField(max_length=200, blank=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created = timezone.now()
+        self.modified = timezone.now()
+        return super(Solver, self).save(*args, **kwargs)
 
 
 # TODO add User

@@ -127,15 +127,6 @@ REST_FRAMEWORK = {
 
 # Cross origin settings
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOW_HEADERS = (
-    'x-requested-with',
-    'content-type',
-    'accept',
-    'origin',
-    'authorization',
-    'X-CSRFToken'
-
-)
 CORS_ORIGIN_WHITELIST = (
     'localhost:8000',
     'localhost:4200',
@@ -146,7 +137,7 @@ CORS_ORIGIN_WHITELIST = (
 
 LANGUAGE_CODE = 'fr-FR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
