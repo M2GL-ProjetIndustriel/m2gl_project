@@ -7,7 +7,7 @@ from api.models import Solver
 class SolverTest(APITestCase):
     @pytest.mark.django_db()
     def test_correct_solver_post_should_return_201(self):
-        response = self.client.post('/api/solvers/', {
+        response = self.client.post('/api/solver/', {
             'name': 'choco',
             'version': '2.0',
             'source_path': 'path1',
