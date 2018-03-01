@@ -34,7 +34,7 @@ class Experimentation(models.Model):
     date = models.DateField()
     solver_parameters = models.CharField(max_length=200)
     solver = models.ForeignKey(Solver, on_delete=models.CASCADE)
-    device_info = models.CharField(max_length=200, blank=True)
+    device = models.CharField(max_length=200, blank=True)
 
 
 class Result(models.Model):
