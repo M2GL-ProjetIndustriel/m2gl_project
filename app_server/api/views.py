@@ -20,7 +20,6 @@ class StandardSetPagination(PageNumberPagination):
 
 
 # API views
-
 @permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     queryset = Instance.objects.all()
