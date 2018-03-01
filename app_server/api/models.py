@@ -22,6 +22,7 @@ class InstanceValue(models.Model):
 class Solver(models.Model):
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=100, blank=True)
+    added = models.DateTimeField(auto_now_add=True)
     # temporary until we find a better way of handling files.
     source_path = models.CharField(max_length=200, blank=True)
     executable_path = models.CharField(max_length=200, blank=True)
@@ -33,7 +34,7 @@ class Experimentation(models.Model):
     date = models.DateField()
     solver_parameters = models.CharField(max_length=200)
     solver = models.ForeignKey(Solver, on_delete=models.CASCADE)
-    device = models.CharField(max_length=200, blank=True)
+    device_info = models.CharField(max_length=200, blank=True)
 
 
 class Result(models.Model):
