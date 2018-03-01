@@ -3,8 +3,9 @@ from rest_framework import permissions, generics
 from rest_framework.decorators import permission_classes
 
 from .models import Instance, Solver, Experimentation
-from .serializers import InstanceSerializer, SolverSerializer, ExperimentationSerializer
-
+from .serializers import (
+    InstanceSerializer, SolverSerializer, ExperimentationSerializer
+)
 
 def index(_):
     return HttpResponse("Hello, world. You're at the api index.")
