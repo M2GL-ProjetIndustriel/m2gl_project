@@ -12,7 +12,7 @@ class InstanceSerializer(serializers.ModelSerializer):
 class SolverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solver
-        fields = ('id', 'name', 'version', 'source_path', 'executable_path')
+        fields = ('id', 'name', 'add_date', 'version', 'source_path', 'executable_path')
 
 
 class ExperimentationSerializer(serializers.ModelSerializer):

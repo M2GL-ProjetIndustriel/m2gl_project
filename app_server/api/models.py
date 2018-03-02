@@ -1,5 +1,5 @@
 from django.db import models
-
+from .constants import *
 
 # Create your models here.
 class Instance(models.Model):
@@ -23,8 +23,11 @@ class Solver(models.Model):
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=100, blank=True)
     # temporary until we find a better way of handling files.
-    source_path = models.CharField(max_length=200, blank=True)
-    executable_path = models.CharField(max_length=200, blank=True)
+    #source_path = models.CharField(max_length=200, blank=True)
+    #executable_path = models.CharField(max_length=200, blank=True)
+    add_date = models.DateField()
+    source_path = models.FileField(upload_to=DOWNLOADS_PATH, blank=True)
+    executable_path = models.FileField(upload_to=DOWNLOADS_PATH, blank=True)
 
 
 # TODO add User

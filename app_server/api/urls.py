@@ -8,6 +8,7 @@ urlpatterns = [
     path('instances/<int:pk>', views.InstanceDetail.as_view()),
     path('solvers/', views.SolverList.as_view()),
     path('solvers/<int:pk>', views.SolverDetail.as_view()),
+    path('solvers/downloads/<str:filename>', views.SourcesFiles.as_view()),
     path('experimentations/', views.ExperimentationList.as_view()),
     path('experimentations/<int:pk>', views.ExperimentationDetail.as_view())
 ]
