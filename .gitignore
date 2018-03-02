@@ -113,7 +113,8 @@ venv.bak/
 ## .gitignore for JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 ##      from https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
 #############################
-
+m2gl_project.iml
+.idea
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -162,3 +163,6 @@ crashlytics-build.properties
 fabric.properties
 
 
+Pipfile
+Pipfile.lock
+app_server/api/migrations/
