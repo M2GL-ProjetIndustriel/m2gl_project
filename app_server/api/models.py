@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from .constants import *
+import os.path
+
+DOWNLOADS_PATH = './downloads/'
 
 # Create your models here.
 class Instance(models.Model):
@@ -20,13 +22,22 @@ class InstanceValue(models.Model):
     feature = models.ForeignKey(InstanceFeature, on_delete=models.CASCADE)
 
 
+def define_path(instance, filename):
+    path_exist = True
+    while path_exist:
+        now = timezone.now()
+        path_format = DOWNLOADS_PATH + '%Y/%m/%d/' + filename + '_%H%M%S%f'
+        path_name = now.strftime(path_format)
+        path_exist = os.path.isfile(path_name)
+    return path_name
+
 class Solver(models.Model):
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(null=True)
     modified = models.DateTimeField(null=True)
-    source_path = models.FileField(upload_to=DOWNLOADS_PATH, blank=True)
-    executable_path = models.FileField(upload_to=DOWNLOADS_PATH, blank=True)
+    source_path = models.FileField(upload_to=define_path, blank=True)
+    executable_path = models.FileField(upload_to=define_path, blank=True)
 
     # from stackoverflow
     def save(self, *args, **kwargs):

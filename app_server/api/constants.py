@@ -1,1 +1,0 @@
-DOWNLOADS_PATH = './downloads/'
