@@ -2,6 +2,7 @@ import pytest
 from rest_framework.test import APITestCase
 from time import sleep
 from api.models import Solver
+from django.urls import reverse
 
 
 class SolverPostTest(APITestCase):
@@ -74,3 +75,28 @@ class SolverPostTest(APITestCase):
         assert solver.name == 'chocobon'
         assert response.status_code == 200
         assert solver.modified.time() != solver.created.time()
+
+
+class SolverGetTest(APITestCase):
+
+    @pytest.mark.django_db()
+    def setup():
+        Solvers.objects.create(name='solver_name', version='v2.6')
+
+    def test_get_solver_list_ok():
+        url = reverse('solver-list')
+        response = self.client.get(url)
+        assert response.status_code == 200
+
+    def test_get_solver_detail_ok():
+        url = 'api/solver/1'
+        response = self.client.get(url)
+        assert response.status_code == 200
+        data = JSONParser.parse(response.data)
+        assert data['name'] == 'solver_name'
+        assert data['version'] == 'v2.6'
+
+    def test_get_solver_detail_ko():
+        url = 'api/solver/10'
+        response = self.client.get(url)
+        assert response.status_code == 404
