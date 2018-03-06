@@ -4,7 +4,6 @@ import os.path
 
 DOWNLOADS_PATH = './downloads/'
 
-# Create your models here.
 class Instance(models.Model):
     name = models.CharField(max_length=100)
     problem_type = models.CharField(max_length=100)
@@ -22,6 +21,10 @@ class InstanceValue(models.Model):
     feature = models.ForeignKey(InstanceFeature, on_delete=models.CASCADE)
 
 
+"""
+    Return the path where the files are downloaded. Also add the time at the end
+    of the filename to differenciate files.
+"""
 def define_path(instance, filename):
     path_exist = True
     while path_exist:
@@ -30,6 +33,7 @@ def define_path(instance, filename):
         path_name = now.strftime(path_format)
         path_exist = os.path.isfile(path_name)
     return path_name
+
 
 class Solver(models.Model):
     name = models.CharField(max_length=100)
