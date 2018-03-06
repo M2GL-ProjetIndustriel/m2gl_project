@@ -5,6 +5,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import filters
 import os.path
 import pathlib
 from urllib.parse import quote
@@ -30,12 +31,34 @@ class CustomPagination(PageNumberPagination):
             'results': data
         })
 
+
+#Same as default ordering but with sort and order parameters in place of ordering
+class CustomOrderingFilter(filters.OrderingFilter):
+    def get_ordering(self, request, queryset, view):
+        default_ordering = "%s" % (getattr(view, 'ordering', ''),)
+        sort = request.query_params.get('sort', default_ordering)
+
+        order = request.query_params.get('order', '')
+
+        mutable = request.query_params._mutable
+        request.query_params._mutable = True
+        request.query_params['ordering'] = ('-' + sort if order == 'desc'
+            else sort)
+        request.query_params._mutable = mutable
+
+        return super().get_ordering(request, queryset, view)
+
+
 # API views
 @permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
     pagination_class = CustomPagination
+    filter_backends = (CustomOrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ('id',)
+
 
 @permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -48,6 +71,9 @@ class SolverList(generics.ListCreateAPIView):
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
     pagination_class = CustomPagination
+    filter_backends = (CustomOrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ('id')
 
 
 @permission_classes((permissions.AllowAny,))
@@ -61,6 +87,9 @@ class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
     pagination_class = CustomPagination
+    filter_backends = (CustomOrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ('id',)
 
 
 @permission_classes((permissions.AllowAny,))
@@ -73,11 +102,13 @@ class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
 class DownloadFiles(APIView):
     def get(self, request, pk, format=None):
         solver = get_object_or_404(Solver.objects.all(), pk=pk)
+
         # Use to know witch file to send (source or executable)
         url_type = request.path.split('/')[-1]
         path_field = (solver.source_path if url_type == 'source'
             else solver.executable_path)
         file_path = path_field.name
+
         # Extract filename from path and cut the time "differentiator" (added
         # when the file was upload).
         send_file_name = file_path.split('/')[-1].rsplit('_', 1)[0]
@@ -89,10 +120,12 @@ class DownloadFiles(APIView):
             fp = open(file_path, 'rb')
             response = HttpResponse(fp.read())
             fp.close()
+
             send_file_name_utf8 = quote(send_file_name.encode('utf-8'))
             filename_header = 'filename*=UTF-8\'\'%s' % send_file_name_utf8
             response['Content-Disposition'] = 'attachment; ' + filename_header
             response['Content-Length'] = os.path.getsize(file_path)
         except FileNotFoundError:
             raise Http404("File does not exist")
+
         return response
