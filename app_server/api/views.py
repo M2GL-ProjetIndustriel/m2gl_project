@@ -100,21 +100,14 @@ class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
 
 @permission_classes((permissions.AllowAny,))
 class DownloadFiles(APIView):
-    def get(self, request, pk, format=None):
-        solver = get_object_or_404(Solver.objects.all(), pk=pk)
-
-        # Use to know witch file to send (source or executable)
-        url_type = request.path.split('/')[-1]
-        path_field = (solver.source_path if url_type == 'source'
-            else solver.executable_path)
-        file_path = path_field.name
-
+    def get(self, request, file_path, format=None):
         # Extract filename from path and cut the time "differentiator" (added
         # when the file was upload).
         send_file_name = file_path.split('/')[-1].rsplit('_', 1)[0]
         response = self.make_response_from_file(file_path, send_file_name)
         return response
 
+    # Create a response object base on a file
     def make_response_from_file(self, file_path, send_file_name):
         try:
             fp = open(file_path, 'rb')
