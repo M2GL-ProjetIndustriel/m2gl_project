@@ -3,7 +3,8 @@ from rest_framework.test import APITestCase
 from time import sleep
 from api.models import Solver
 from django.urls import reverse
-
+from rest_framework.parsers import JSONParser
+from django.utils.six import BytesIO
 
 class SolverPostTest(APITestCase):
     data = {
@@ -79,24 +80,23 @@ class SolverPostTest(APITestCase):
 
 class SolverGetTest(APITestCase):
 
+    def test_get_solver_list_ok(self):
+        url = reverse('solver-list')
+        response = self.client.get(url)
+        assert response.status_code == 200
+
     @pytest.mark.django_db()
-    def setup():
-        Solvers.objects.create(name='solver_name', version='v2.6')
-
-    def test_get_solver_list_ok():
-        url = reverse('solver-list')
+    def test_get_solver_detail_ok(self):
+        Solver.objects.create(name='choco', version='v2.0')
+        url = '/api/solver/1'
         response = self.client.get(url)
-        assert response.status_code == 200
+        assert response.status_code == 200
+        data = response.data
 
-    def test_get_solver_detail_ok():
-        url = 'api/solver/1'
-        response = self.client.get(url)
-        assert response.status_code == 200
-        data = JSONParser.parse(response.data)
-        assert data['name'] == 'solver_name'
-        assert data['version'] == 'v2.6'
+        assert data['name'] == 'choco'
+        assert data['version'] == 'v2.0'
 
-    def test_get_solver_detail_ko():
-        url = 'api/solver/10'
+    def test_get_solver_detail_ko(self):
+        url = 'api/solver/10'
         response = self.client.get(url)
-        assert response.status_code == 404
+        assert response.status_code == 404
