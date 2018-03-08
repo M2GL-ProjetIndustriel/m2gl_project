@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework.authtoken import views as tokenviews
 from . import views
+from .utils import *
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -13,3 +14,5 @@ urlpatterns = [
     path('experimentation/<int:pk>', views.ExperimentationDetail.as_view()),
     path('token-auth/', tokenviews.obtain_auth_token)
 ]
+
+init_tokens()
