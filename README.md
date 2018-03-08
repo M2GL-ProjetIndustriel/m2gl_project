@@ -35,6 +35,11 @@ $ python app_server/manage.py runserver
     `$ pipenv shell`
 4. Install postgresql [(here !)](https://www.openscg.com/bigsql/postgresql/installers.jsp/)    
 5. Setup postgresql.  
+
+## Populate database with dummy values
+
+`$ python manage.py loaddata ./api/fixtures/db.json`
+
     - USER: toto  
     - PASSWORD: azert  
     - Rights: superuser + createdb  
