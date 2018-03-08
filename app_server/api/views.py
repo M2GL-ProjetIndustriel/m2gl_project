@@ -55,7 +55,8 @@ class InstanceList(generics.ListCreateAPIView):
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter,)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    search_fields = ('id', 'name', 'problem_type', 'path')
     ordering_fields = '__all__'
     ordering = ('id',)
 
@@ -71,9 +72,11 @@ class SolverList(generics.ListCreateAPIView):
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter,)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    search_fields = ('id', 'name', 'version', 'created', 'modified', 'source_path', 'executable_path')
     ordering_fields = '__all__'
     ordering = ('id')
+
 
 
 @permission_classes((permissions.AllowAny,))
@@ -87,7 +90,8 @@ class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter,)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    search_fields = ('date', 'device', 'id', 'name', 'solver_parameters')
     ordering_fields = '__all__'
     ordering = ('id',)
 
