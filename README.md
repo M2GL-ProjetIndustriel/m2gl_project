@@ -54,3 +54,11 @@ To initialize the database use the following command:
 
 `$ python manage.py loaddata ./api/fixtures/db.json`
 
+## Empty Database
+
+`$ python manage.py flush`
+
+## Save current state of the database
+
+`$ python manage.py dumpdata ./api/fixtures/db.json`
+
