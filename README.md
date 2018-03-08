@@ -36,10 +36,6 @@ $ python app_server/manage.py runserver
 4. Install postgresql [(here !)](https://www.openscg.com/bigsql/postgresql/installers.jsp/)    
 5. Setup postgresql.  
 
-## Populate database with dummy values
-
-`$ python manage.py loaddata ./api/fixtures/db.json`
-
     - USER: toto  
     - PASSWORD: azert  
     - Rights: superuser + createdb  
@@ -51,3 +47,10 @@ $ python app_server/manage.py runserver
     `$ python app_server/manage.py makemigrations api`
 2. Install migration  
     `$ python app_server/manage.py migrate`
+    
+## Populate database with dummy values
+
+To initialize the database use the following command:
+
+`$ python manage.py loaddata ./api/fixtures/db.json`
+
