@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',  # django rest_framework added.
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
