@@ -1,0 +1,138 @@
+[
+	{
+		"model": "api.instance",
+		"pk": 1,
+		"fields": {
+			"name": "N-queens",
+			"problem_type": "CSP",
+			"path": ""
+		}
+	},
+	{
+		"model": "api.instance",
+		"pk": 2,
+		"fields": {
+			"name": "4-coloring",
+			"problem_type": "SAT",
+			"path": ""
+		}
+	},
+	{
+		"model": "api.solver",
+		"pk": 1,
+		"fields": {
+			"name": "Choco",
+			"version": "2.0",
+			"created": "2018-03-08T15:40:04.282Z",
+			"modified": "2018-03-08T15:40:04.282Z",
+			"source_path": "",
+			"executable_path": ""
+		}
+	},
+	{
+		"model": "api.solver",
+		"pk": 2,
+		"fields": {
+			"name": "Naxos",
+			"version": "1.0",
+			"created": "2018-03-08T15:52:09.409Z",
+			"modified": "2018-03-08T15:52:09.409Z",
+			"source_path": "",
+			"executable_path": ""
+		}
+	},
+	{
+		"model": "sessions.session",
+		"pk": "qrb3idq4jfcn5m3cmcaae8tjmiq53zje",
+		"fields": {
+			"session_data": "ZmVjMjY1NDVhN2RkNjEzNDczZWIxZTA0MTE5OGZiY2ZhMTU2YmRmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9oYXNoIjoiOWEwODc3ZDZlMmViMmZkNWIxZTdmYTAyYmM5MGQ3YTM3MDJmOTQ4OCIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=",
+			"expire_date": "2018-03-22T15:37:06.071Z"
+		}
+	},
+	{
+		"model": "sessions.session",
+		"pk": "ra0dborwdds29l8hpv5bqk1fnzd0asez",
+		"fields": {
+			"session_data": "ZmVjMjY1NDVhN2RkNjEzNDczZWIxZTA0MTE5OGZiY2ZhMTU2YmRmNDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9oYXNoIjoiOWEwODc3ZDZlMmViMmZkNWIxZTdmYTAyYmM5MGQ3YTM3MDJmOTQ4OCIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=",
+			"expire_date": "2018-03-22T15:49:54.561Z"
+		}
+	},
+	{
+		"model": "auth.user",
+		"pk": 1,
+		"fields": {
+			"password": "pbkdf2_sha256$100000$VMX6LFZnxBVI$gTbbDfkY/rJoK5KrrMvl9oWt9u4YbkjwilpWIVny+ys=",
+			"last_login": "2018-03-08T15:49:54.554Z",
+			"is_superuser": true,
+			"username": "admin",
+			"first_name": "",
+			"last_name": "",
+			"email": "lucile.billard@yahoo.fr",
+			"is_staff": true,
+			"is_active": true,
+			"date_joined": "2018-03-08T15:36:19.276Z",
+			"groups": [],
+			"user_permissions": []
+		}
+	},
+	{
+		"model": "auth.user",
+		"pk": 2,
+		"fields": {
+			"password": "pbkdf2_sha256$100000$tWlMpRmdLgxc$7RnAt/U4QW1CFnDpso74uk6Sn1annlG/lcCmpK0w2i4=",
+			"last_login": null,
+			"is_superuser": false,
+			"username": "Quentin",
+			"first_name": "",
+			"last_name": "",
+			"email": "",
+			"is_staff": false,
+			"is_active": true,
+			"date_joined": "2018-03-08T15:37:35.987Z",
+			"groups": [],
+			"user_permissions": []
+		}
+	},
+	{
+		"model": "auth.user",
+		"pk": 3,
+		"fields": {
+			"password": "pbkdf2_sha256$100000$dUp29yd8IH9t$tiS8LeVt73D8f9gloxhPel3UuJPVW492VNUHMTsyxWw=",
+			"last_login": null,
+			"is_superuser": false,
+			"username": "Fodil",
+			"first_name": "",
+			"last_name": "",
+			"email": "",
+			"is_staff": false,
+			"is_active": true,
+			"date_joined": "2018-03-08T15:38:36.282Z",
+			"groups": [],
+			"user_permissions": []
+		}
+	},
+	{
+		"model": "authtoken.token",
+		"pk": "33e0ffe7488e6ecb2d4bb25f3968d22727073382",
+		"fields": {
+			"user": 2,
+			"created": "2018-03-08T15:54:36.866Z"
+		}
+	},
+	{
+		"model": "authtoken.token",
+		"pk": "3fecacd0d4a8089362c9099373477bd2b5c1de96",
+		"fields": {
+			"user": 1,
+			"created": "2018-03-08T15:36:49.690Z"
+		}
+	},
+	{
+		"model": "authtoken.token",
+		"pk": "a9b57552a97e2eb8e53f73f4d9bd0ef5bd16c27f",
+		"fields": {
+			"user": 3,
+			"created": "2018-03-08T15:54:37.594Z"
+		}
+	}
+]

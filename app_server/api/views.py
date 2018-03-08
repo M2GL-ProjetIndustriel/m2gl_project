@@ -52,7 +52,7 @@ class CustomOrderingFilter(filters.OrderingFilter):
 
 # API views
 class InstanceList(generics.ListCreateAPIView):
-    authentication_classes = (TokenAuthentication)
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     queryset = Instance.objects.all()
@@ -64,7 +64,7 @@ class InstanceList(generics.ListCreateAPIView):
 
 
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = (TokenAuthentication)
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     queryset = Instance.objects.all()
@@ -72,7 +72,7 @@ class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SolverList(generics.ListCreateAPIView):
-    authentication_classes = (TokenAuthentication)
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     queryset = Solver.objects.all()
@@ -84,9 +84,9 @@ class SolverList(generics.ListCreateAPIView):
 
 
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = (TokenAuthentication)
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    
+
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
 

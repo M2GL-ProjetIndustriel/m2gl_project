@@ -15,5 +15,5 @@ urlpatterns = [
     path('token-auth/', tokenviews.obtain_auth_token)
 ]
 
-create_dummy_user() # temp
+#create_dummy_user() # temp
 init_tokens()
