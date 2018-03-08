@@ -9,7 +9,8 @@ from rest_framework import filters
 import os.path
 import pathlib
 from urllib.parse import quote
-
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Instance, Solver, Experimentation
 from .serializers import (
     InstanceSerializer, SolverSerializer, ExperimentationSerializer
@@ -50,8 +51,10 @@ class CustomOrderingFilter(filters.OrderingFilter):
 
 
 # API views
-@permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
     pagination_class = CustomPagination
@@ -61,14 +64,18 @@ class InstanceList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class SolverList(generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
     pagination_class = CustomPagination
@@ -79,13 +86,14 @@ class SolverList(generics.ListCreateAPIView):
 
 
 
-@permission_classes((permissions.AllowAny,))
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
@@ -95,14 +103,11 @@ class ExperimentationList(generics.ListCreateAPIView):
     ordering_fields = '__all__'
     ordering = ('id',)
 
-
-@permission_classes((permissions.AllowAny,))
 class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class DownloadFiles(APIView):
     def get(self, request, file_path, format=None):
         # Extract filename from path and cut the time "differentiator" (added
