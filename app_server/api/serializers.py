@@ -32,12 +32,6 @@ class ExperimentationSerializer(serializers.ModelSerializer):
 class ResultValueSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResultValue
-        fields = ('id', 'value', 'result')
-
-
-class ResultValueSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ResultValue
         fields = ('id', 'value', 'measurement')
 
 
