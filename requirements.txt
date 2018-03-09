@@ -12,5 +12,6 @@ six==1.11.0
 django-cors-headers
 # postgresql
 psycopg2==2.7.4
+drf-writable-nested==0.4.1
 
 requests==2.18.4

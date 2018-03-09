@@ -11,10 +11,8 @@ import pathlib
 from urllib.parse import quote
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import Instance, Solver, Experimentation
-from .serializers import (
-    InstanceSerializer, SolverSerializer, ExperimentationSerializer
-)
+from .models import *
+from .serializers import *
 
 
 def index(_):
@@ -38,9 +36,9 @@ class CustomOrderingFilter(filters.OrderingFilter):
     def get_ordering(self, request, queryset, view):
         default_ordering = "%s" % (getattr(view, 'ordering', ''),)
         sort = request.query_params.get('sort', default_ordering)
-
         order = request.query_params.get('order', '')
 
+        #Add an ordering parameters to the query
         mutable = request.query_params._mutable
         request.query_params._mutable = True
         request.query_params['ordering'] = ('-' + sort if order == 'desc'
@@ -51,6 +49,7 @@ class CustomOrderingFilter(filters.OrderingFilter):
 
 
 # API views
+#@permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -63,7 +62,7 @@ class InstanceList(generics.ListCreateAPIView):
     ordering_fields = '__all__'
     ordering = ('id',)
 
-
+#@permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -71,7 +70,7 @@ class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
 
-
+#@permission_classes((permissions.AllowAny,))
 class SolverList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -80,12 +79,12 @@ class SolverList(generics.ListCreateAPIView):
     serializer_class = SolverSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter)
-    search_fields = ('id', 'name', 'version', 'created', 'modified', 'source_path', 'executable_path')
+    search_fields = ('id', 'name', 'version', 'created', 'modified',
+        'source_path', 'executable_path')
     ordering_fields = '__all__'
-    ordering = ('id')
+    ordering = ('id',)
 
-
-
+#@permission_classes((permissions.AllowAny,))
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -93,7 +92,7 @@ class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
 
-
+#@permission_classes((permissions.AllowAny,))
 class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
@@ -103,9 +102,45 @@ class ExperimentationList(generics.ListCreateAPIView):
     ordering_fields = '__all__'
     ordering = ('id',)
 
+
+#@permission_classes((permissions.AllowAny,))
 class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
+
+
+#@permission_classes((permissions.AllowAny,))
+class ResultList(generics.ListCreateAPIView):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+    pagination_class = CustomPagination
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    search_fields = ('status', 'id')
+    ordering_fields = '__all__'
+    ordering = ('id',)
+
+
+#@permission_classes((permissions.AllowAny,))
+class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+
+
+#@permission_classes((permissions.AllowAny,))
+class ResultMeasurementList(generics.ListCreateAPIView):
+    queryset = ResultMeasurement.objects.all()
+    serializer_class = ResultMeasurementSerializer
+    pagination_class = CustomPagination
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    search_fields = ('name', 'unit', 'id')
+    ordering_fields = '__all__'
+    ordering = ('id',)
+
+
+#@permission_classes((permissions.AllowAny,))
+class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ResultMeasurement.objects.all()
+    serializer_class = ResultMeasurementSerializer
 
 
 class DownloadFiles(APIView):

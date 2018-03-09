@@ -42,6 +42,7 @@ class Solver(models.Model):
     modified = models.DateTimeField(null=True)
     source_path = models.FileField(upload_to=define_path, blank=True)
     executable_path = models.FileField(upload_to=define_path, blank=True)
+    description = models.CharField(max_length=400, blank=True)
 
     # from stackoverflow
     def save(self, *args, **kwargs):
@@ -59,11 +60,12 @@ class Experimentation(models.Model):
     solver_parameters = models.CharField(max_length=200)
     solver = models.ForeignKey(Solver, on_delete=models.CASCADE)
     device = models.CharField(max_length=200, blank=True)
+    description = models.CharField(max_length=400, blank=True)
 
 
 class Result(models.Model):
     status = models.CharField(max_length=100)
-    result = models.ForeignKey(Experimentation, on_delete=models.CASCADE)
+    experimentation = models.ForeignKey(Experimentation, on_delete=models.CASCADE)
 
 
 class ResultMeasurement(models.Model):
@@ -73,5 +75,5 @@ class ResultMeasurement(models.Model):
 
 class ResultValue(models.Model):
     value = models.CharField(max_length=400)
-    result = models.ForeignKey(Result, on_delete=models.CASCADE)
+    result = models.ForeignKey(Result, related_name='values', on_delete=models.CASCADE)
     measurement = models.ForeignKey(ResultMeasurement, on_delete=models.CASCADE)
