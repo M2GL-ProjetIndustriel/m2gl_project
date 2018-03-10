@@ -7,6 +7,7 @@ DOWNLOADS_PATH = './downloads/'
 class Instance(models.Model):
     name = models.CharField(max_length=100)
     problem_type = models.CharField(max_length=100)
+    problem_family = models.CharField(max_length=100, blank=True)
     path = models.CharField(max_length=200, blank=True)
 
 
@@ -17,7 +18,8 @@ class InstanceFeature(models.Model):
 
 class InstanceValue(models.Model):
     value = models.CharField(max_length=400)
-    instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
+    instance = models.ForeignKey(Instance, related_name='values',
+        on_delete=models.CASCADE)
     feature = models.ForeignKey(InstanceFeature, on_delete=models.CASCADE)
 
 
@@ -57,7 +59,7 @@ class Solver(models.Model):
 class Experimentation(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
-    solver_parameters = models.CharField(max_length=200)
+    solver_parameters = models.CharField(max_length=200, blank=True)
     solver = models.ForeignKey(Solver, on_delete=models.CASCADE)
     device = models.CharField(max_length=200, blank=True)
     description = models.CharField(max_length=400, blank=True)
@@ -75,5 +77,6 @@ class ResultMeasurement(models.Model):
 
 class ResultValue(models.Model):
     value = models.CharField(max_length=400)
-    result = models.ForeignKey(Result, related_name='values', on_delete=models.CASCADE)
+    result = models.ForeignKey(Result, related_name='values',
+        on_delete=models.CASCADE)
     measurement = models.ForeignKey(ResultMeasurement, on_delete=models.CASCADE)

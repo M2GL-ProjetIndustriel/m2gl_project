@@ -5,8 +5,10 @@ from .utils import *
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('instances/', views.InstanceList.as_view()),
-    path('instances/<int:pk>', views.InstanceDetail.as_view()),
+    path('instance/', views.InstanceList.as_view()),
+    path('instance/<int:pk>', views.InstanceDetail.as_view()),
+    path('instanceFeature/', views.InstanceFeatureList.as_view()),
+    path('instanceFeature/<int:pk>', views.InstanceFeatureDetail.as_view()),
     path('solver/', views.SolverList.as_view(), name='solver-list'),
     path('solver/<int:pk>', views.SolverDetail.as_view()),
     path('solver/<path:file_path>', views.DownloadFiles.as_view()),

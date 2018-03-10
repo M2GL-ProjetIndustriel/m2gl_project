@@ -49,7 +49,7 @@ class CustomOrderingFilter(filters.OrderingFilter):
 
 
 # API views
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -58,11 +58,12 @@ class InstanceList(generics.ListCreateAPIView):
     serializer_class = InstanceSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter)
-    search_fields = ('id', 'name', 'problem_type', 'path')
+    search_fields = ('id', 'name', 'problem_type', 'problem_family', 'path')
     ordering_fields = '__all__'
     ordering = ('id',)
 
-#@permission_classes((permissions.AllowAny,))
+
+@permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -70,7 +71,25 @@ class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
 
-#@permission_classes((permissions.AllowAny,))
+
+@permission_classes((permissions.AllowAny,))
+class InstanceFeatureList(generics.ListCreateAPIView):
+    queryset = InstanceFeature.objects.all()
+    serializer_class = InstanceFeatureSerializer
+    pagination_class = CustomPagination
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    search_fields = ('name', 'unit', 'id')
+    ordering_fields = '__all__'
+    ordering = ('id',)
+
+
+@permission_classes((permissions.AllowAny,))
+class InstanceFeatureDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InstanceFeature.objects.all()
+    serializer_class = InstanceFeatureSerializer
+
+
+@permission_classes((permissions.AllowAny,))
 class SolverList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -84,7 +103,8 @@ class SolverList(generics.ListCreateAPIView):
     ordering_fields = '__all__'
     ordering = ('id',)
 
-#@permission_classes((permissions.AllowAny,))
+
+@permission_classes((permissions.AllowAny,))
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -92,7 +112,8 @@ class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
 
-#@permission_classes((permissions.AllowAny,))
+
+@permission_classes((permissions.AllowAny,))
 class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
@@ -103,13 +124,13 @@ class ExperimentationList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultList(generics.ListCreateAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
@@ -120,13 +141,13 @@ class ResultList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultMeasurementList(generics.ListCreateAPIView):
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
@@ -137,7 +158,7 @@ class ResultMeasurementList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
