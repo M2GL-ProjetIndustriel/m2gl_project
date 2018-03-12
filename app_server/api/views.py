@@ -6,6 +6,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 import os.path
 import pathlib
 from urllib.parse import quote
@@ -49,7 +50,7 @@ def index(_):
 
 
 # API views
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -57,13 +58,15 @@ class InstanceList(generics.ListCreateAPIView):
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
-    search_fields = ('id', 'name', 'problem_type', 'problem_family', 'path')
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter,
+        DjangoFilterBackend)
+    search_fields = ('id', 'name', 'instance_type', 'instance_family', 'path')
+    filter_fields = ('id', 'name', 'instance_type', 'instance_family', 'path')
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -72,24 +75,26 @@ class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = InstanceSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class InstanceFeatureList(generics.ListCreateAPIView):
     queryset = InstanceFeature.objects.all()
     serializer_class = InstanceFeatureSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter,
+        DjangoFilterBackend)
     search_fields = ('name', 'unit', 'id')
+    filter_fields = ('name', 'unit', 'id')
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class InstanceFeatureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = InstanceFeature.objects.all()
     serializer_class = InstanceFeatureSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class SolverList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -97,14 +102,16 @@ class SolverList(generics.ListCreateAPIView):
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter,
+        DjangoFilterBackend)
     search_fields = ('id', 'name', 'version', 'created', 'modified',
         'source_path', 'executable_path')
+    filter_fields = ('id', 'name', 'version', 'created', 'modified')
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -113,58 +120,64 @@ class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SolverSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter,
+        DjangoFilterBackend)
     search_fields = ('date', 'device', 'id', 'name', 'solver_parameters')
+    filter_fields = ('date', 'device', 'id', 'name', 'solver_parameters')
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultList(generics.ListCreateAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter,
+        DjangoFilterBackend)
     search_fields = ('status', 'id')
+    filter_fields = ('status', 'id')
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultMeasurementList(generics.ListCreateAPIView):
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
     pagination_class = CustomPagination
-    filter_backends = (CustomOrderingFilter, filters.SearchFilter)
+    filter_backends = (CustomOrderingFilter, filters.SearchFilter,
+        DjangoFilterBackend)
     search_fields = ('name', 'unit', 'id')
+    filter_fields = ('name', 'unit', 'id')
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
 
 
-#@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.AllowAny,))
 class DownloadFiles(APIView):
     def get(self, request, file_path, format=None):
         # Extract filename from path and cut the time "differentiator" (added

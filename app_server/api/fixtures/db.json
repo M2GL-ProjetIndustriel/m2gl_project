@@ -4,7 +4,7 @@
 		"pk": 1,
 		"fields": {
 			"name": "N-queens",
-			"problem_type": "CSP",
+			"instance_type": "CSP",
 			"path": ""
 		}
 	},
@@ -13,7 +13,7 @@
 		"pk": 2,
 		"fields": {
 			"name": "4-coloring",
-			"problem_type": "SAT",
+			"instance_type": "SAT",
 			"path": ""
 		}
 	},

@@ -7,8 +7,8 @@ DOWNLOADS_PATH = './downloads/'
 
 class Instance(models.Model):
     name = models.CharField(max_length=100)
-    problem_type = models.CharField(max_length=100)
-    problem_family = models.CharField(max_length=100, blank=True)
+    instance_type = models.CharField(max_length=100)
+    instance_family = models.CharField(max_length=100, blank=True)
     path = models.CharField(max_length=200, blank=True)
 
 
@@ -22,7 +22,6 @@ class InstanceValue(models.Model):
     instance = models.ForeignKey(Instance, related_name='values',
         on_delete=models.CASCADE)
     feature = models.ForeignKey(InstanceFeature, on_delete=models.CASCADE)
-
 
 
 def define_path(instance, filename):
@@ -84,17 +83,21 @@ def save_old_filepath(sender, instance, **kwargs):
     instance.old_executable_path = None
 
     if instance.pk:
-        old_solver = Solver.objects.get(pk=instance.pk)
+        try:
+            old_solver = Solver.objects.get(pk=instance.pk)
 
-        instance.old_source_path = old_solver.source_path
-        instance.old_executable_path = old_solver.executable_path
+            instance.old_source_path = old_solver.source_path
+            instance.old_executable_path = old_solver.executable_path
+        except Solver.DoesNotExist:
+            # Error raise when loadding data from fixtures.
+            pass
 
 
 def delete_old_file(filefield, old_filefield):
     """
     Delete a file replaced by a new one.
     """
-    if old_filefield and filefield.path != old_filefield.path:
+    if old_filefield and filefield and filefield.path != old_filefield.path:
         delete_file(old_filefield)
 
 
@@ -120,7 +123,7 @@ class Experimentation(models.Model):
 class Result(models.Model):
     status = models.CharField(max_length=100)
     experimentation = models.ForeignKey(Experimentation, on_delete=models.CASCADE)
-
+    instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
 
 class ResultMeasurement(models.Model):
     name = models.CharField(max_length=100)

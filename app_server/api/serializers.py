@@ -43,7 +43,7 @@ class ResultSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id', 'status', 'experimentation', 'values')
+        fields = ('id', 'status', 'experimentation', 'instance', 'values')
 
 
 class ResultMeasurementSerializer(serializers.ModelSerializer):
@@ -63,7 +63,7 @@ class InstanceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Instance
-        fields = ('id', 'name', 'problem_type', 'problem_family', 'path', 'values')
+        fields = ('id', 'name', 'instance_type', 'instance_family', 'path', 'values')
 
 
 class InstanceFeatureSerializer(serializers.ModelSerializer):
