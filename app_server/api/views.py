@@ -15,10 +15,6 @@ from .models import *
 from .serializers import *
 
 
-def index(_):
-    return HttpResponse("Hello, world. You're at the api index.")
-
-
 class CustomPagination(PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'
@@ -48,8 +44,12 @@ class CustomOrderingFilter(filters.OrderingFilter):
         return super().get_ordering(request, queryset, view)
 
 
+def index(_):
+    return HttpResponse("Hello, world. You're at the api index.")
+
+
 # API views
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -63,7 +63,7 @@ class InstanceList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -72,7 +72,7 @@ class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = InstanceSerializer
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class InstanceFeatureList(generics.ListCreateAPIView):
     queryset = InstanceFeature.objects.all()
     serializer_class = InstanceFeatureSerializer
@@ -83,13 +83,13 @@ class InstanceFeatureList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class InstanceFeatureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = InstanceFeature.objects.all()
     serializer_class = InstanceFeatureSerializer
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class SolverList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -104,7 +104,7 @@ class SolverList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -113,7 +113,7 @@ class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SolverSerializer
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class ExperimentationList(generics.ListCreateAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
@@ -124,13 +124,13 @@ class ExperimentationList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class ResultList(generics.ListCreateAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
@@ -141,13 +141,13 @@ class ResultList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class ResultMeasurementList(generics.ListCreateAPIView):
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
@@ -158,12 +158,13 @@ class ResultMeasurementList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
+#@permission_classes((permissions.AllowAny,))
 class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
 
 
+#@permission_classes((permissions.AllowAny,))
 class DownloadFiles(APIView):
     def get(self, request, file_path, format=None):
         # Extract filename from path and cut the time "differentiator" (added
