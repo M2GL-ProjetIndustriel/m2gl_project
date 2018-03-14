@@ -5,15 +5,20 @@ from api.models import Solver
 from django.urls import reverse
 from rest_framework.parsers import JSONParser
 from django.utils.six import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+import os.path
 
 class SolverPostTest(APITestCase):
     data = {
         'name': 'choco',
         'version': '2.0',
-        #TODO now server use FileField, good luck!!! :D
-        #'source_path': 'path1',
-        #'executable_path': 'path2'
     }
+
+    def setUp(self):
+        self.data['source_path'] = SimpleUploadedFile("source.txt",
+            b"file_content")
+        self.data['executable_path'] = SimpleUploadedFile("exe.txt",
+            b"file_content")
 
     def post(self):
         return self.client.post('/api/solver/', self.data)
@@ -22,8 +27,10 @@ class SolverPostTest(APITestCase):
         response = self.post()
         assert response.status_code == 201
 
+
     @pytest.mark.django_db()
     def test_post_should_be_in_db(self):
+        print("TEST 2")
         self.post()
         queryset = Solver.objects.all()
         solver = queryset[0]
@@ -32,9 +39,8 @@ class SolverPostTest(APITestCase):
 
         assert solver.name == self.data['name']
         assert solver.version == self.data['version']
-        #TODO now server use FileField, good luck!!! :D
-        #assert solver.source_path == self.data['source_path']
-        #assert solver.executable_path == self.data['executable_path']
+        assert os.path.isfile(solver.source_path.path)
+        assert os.path.isfile(solver.executable_path.path)
 
     @pytest.mark.django_db()
     def test_should_have_created(self):
@@ -87,8 +93,8 @@ class SolverGetTest(APITestCase):
 
     @pytest.mark.django_db()
     def test_get_solver_detail_ok(self):
-        Solver.objects.create(name='choco', version='v2.0')
-        url = '/api/solver/1'
+        solver = Solver.objects.create(name='choco', version='v2.0')
+        url = '/api/solver/' + str(solver.id)
         response = self.client.get(url)
         assert response.status_code == 200
         data = response.data
