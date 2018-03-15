@@ -6,7 +6,7 @@ from django.urls import reverse
 from rest_framework.parsers import JSONParser
 from django.utils.six import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
-import os.path
+import os
 
 class SolverPostTest(APITestCase):
     data = {
@@ -20,6 +20,16 @@ class SolverPostTest(APITestCase):
         self.data['executable_path'] = SimpleUploadedFile("exe.txt",
             b"file_content")
 
+    def tearDown(self):
+        queryset = Solver.objects.all()
+        solver = queryset[0]
+
+        if os.path.isfile(solver.source_path.path):
+            os.remove(solver.source_path.path)
+
+        if os.path.isfile(solver.executable_path.path):
+            os.remove(solver.executable_path.path)
+
     def post(self):
         return self.client.post('/api/solver/', self.data)
 
@@ -27,10 +37,8 @@ class SolverPostTest(APITestCase):
         response = self.post()
         assert response.status_code == 201
 
-
     @pytest.mark.django_db()
     def test_post_should_be_in_db(self):
-        print("TEST 2")
         self.post()
         queryset = Solver.objects.all()
         solver = queryset[0]
@@ -70,10 +78,12 @@ class SolverPostTest(APITestCase):
         queryset = Solver.objects.all()
         solver = queryset[0]
         assert solver.name == 'choco'
+        old_source_path = solver.source_path.path
 
         sleep(2)
+        new_file = SimpleUploadedFile("source2.txt", b"file_content")
         response = self.client.put('/api/solver/' + str(solver.id), {
-            'name': 'chocobon'
+            'name': 'chocobon', 'source_path': new_file
         })
 
         queryset = Solver.objects.all()
@@ -82,6 +92,9 @@ class SolverPostTest(APITestCase):
         assert solver.name == 'chocobon'
         assert response.status_code == 200
         assert solver.modified.time() != solver.created.time()
+        assert solver.source_path.path != old_source_path
+        assert os.path.isfile(solver.source_path.path)
+        assert not os.path.isfile(old_source_path)
 
 
 class SolverGetTest(APITestCase):
@@ -106,3 +119,9 @@ class SolverGetTest(APITestCase):
         url = 'api/solver/10'
         response = self.client.get(url)
         assert response.status_code == 404
+
+    def test_get_solver_file(self):
+        pass
+
+    def test_get_solver_file_ko(self):
+        pass
