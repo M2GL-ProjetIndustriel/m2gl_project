@@ -6,7 +6,19 @@ from django.urls import reverse
 from rest_framework.parsers import JSONParser
 from django.utils.six import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
 import os
+
+
+def token_authentification(calling_class):
+    calling_class.user = User.objects.create_superuser('admin', 'admin@admin.com',
+        'admin123')
+    token = Token.objects.create(user=calling_class.user)
+    calling_class.client = APIClient()
+    calling_class.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+
 
 class SolverPostTest(APITestCase):
     data = {
@@ -15,10 +27,14 @@ class SolverPostTest(APITestCase):
     }
 
     def setUp(self):
+        #Add iles to data
         self.data['source_path'] = SimpleUploadedFile("source.txt",
             b"file_content")
         self.data['executable_path'] = SimpleUploadedFile("exe.txt",
             b"file_content")
+
+        token_authentification(self)
+
 
     def tearDown(self):
         queryset = Solver.objects.all()
@@ -31,6 +47,7 @@ class SolverPostTest(APITestCase):
             os.remove(solver.executable_path.path)
 
     def post(self):
+        #self.client.force_login(user=self.user)
         return self.client.post('/api/solver/', self.data)
 
     def test_post_status_should_be_201(self):
@@ -98,6 +115,9 @@ class SolverPostTest(APITestCase):
 
 
 class SolverGetTest(APITestCase):
+
+    def setUp(self):
+        token_authentification(self)
 
     def test_get_solver_list_ok(self):
         url = reverse('solver-list')

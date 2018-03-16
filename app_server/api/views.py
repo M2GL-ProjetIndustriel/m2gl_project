@@ -11,7 +11,7 @@ import os.path
 import pathlib
 from urllib.parse import quote
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from .models import *
 from .serializers import *
 
@@ -50,10 +50,9 @@ def index(_):
 
 
 # API views
-@permission_classes((permissions.AllowAny,))
 class InstanceList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
@@ -66,17 +65,18 @@ class InstanceList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     queryset = Instance.objects.all()
     serializer_class = InstanceSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class InstanceFeatureList(generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = InstanceFeature.objects.all()
     serializer_class = InstanceFeatureSerializer
     pagination_class = CustomPagination
@@ -88,16 +88,17 @@ class InstanceFeatureList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class InstanceFeatureDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = InstanceFeature.objects.all()
     serializer_class = InstanceFeatureSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class SolverList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
@@ -111,17 +112,18 @@ class SolverList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class ExperimentationList(generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
     pagination_class = CustomPagination
@@ -133,14 +135,18 @@ class ExperimentationList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class ExperimentationDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = Experimentation.objects.all()
     serializer_class = ExperimentationSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class ResultList(generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
     pagination_class = CustomPagination
@@ -152,14 +158,18 @@ class ResultList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class ResultMeasurementList(generics.ListCreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
     pagination_class = CustomPagination
@@ -171,14 +181,18 @@ class ResultMeasurementList(generics.ListCreateAPIView):
     ordering = ('id',)
 
 
-@permission_classes((permissions.AllowAny,))
 class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = ResultMeasurement.objects.all()
     serializer_class = ResultMeasurementSerializer
 
 
-@permission_classes((permissions.AllowAny,))
 class DownloadFiles(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, file_path, format=None):
         # Extract filename from path and cut the time "differentiator" (added
         # when the file was upload).
