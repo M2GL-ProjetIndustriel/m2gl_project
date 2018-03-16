@@ -11,6 +11,7 @@ from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 import os
 
+SOLVER_URL = '/api/solver'
 
 def token_authentification(calling_class):
     calling_class.user = User.objects.create_superuser('admin', 'admin@admin.com',
@@ -27,7 +28,6 @@ class SolverPostTest(APITestCase):
     }
 
     def setUp(self):
-        #Add iles to data
         self.data['source_path'] = SimpleUploadedFile("source.txt",
             b"file_content")
         self.data['executable_path'] = SimpleUploadedFile("exe.txt",
@@ -47,8 +47,7 @@ class SolverPostTest(APITestCase):
             os.remove(solver.executable_path.path)
 
     def post(self):
-        #self.client.force_login(user=self.user)
-        return self.client.post('/api/solver/', self.data)
+        return self.client.post(SOLVER_URL, self.data)
 
     def test_post_status_should_be_201(self):
         response = self.post()
@@ -99,7 +98,7 @@ class SolverPostTest(APITestCase):
 
         sleep(2)
         new_file = SimpleUploadedFile("source2.txt", b"file_content")
-        response = self.client.put('/api/solver/' + str(solver.id), {
+        response = self.client.put(SOLVER_URL + '/' + str(solver.id), {
             'name': 'chocobon', 'source_path': new_file
         })
 
@@ -127,7 +126,7 @@ class SolverGetTest(APITestCase):
     @pytest.mark.django_db()
     def test_get_solver_detail_ok(self):
         solver = Solver.objects.create(name='choco', version='v2.0')
-        url = '/api/solver/' + str(solver.id)
+        url = SOLVER_URL + '/' + str(solver.id)
         response = self.client.get(url)
         assert response.status_code == 200
         data = response.data
@@ -140,8 +139,22 @@ class SolverGetTest(APITestCase):
         response = self.client.get(url)
         assert response.status_code == 404
 
-    def test_get_solver_file(self):
-        pass
+    @pytest.mark.django_db()
+    def test_get_solver_file_ok(self):
+        source_file = SimpleUploadedFile("sourceTest.txt", b"file_content")
+        solver = Solver.objects.create(name='choco', version='v2.0',
+            source_path=source_file)
+
+        url = SOLVER_URL + '/' + solver.source_path.path
+        response = self.client.get(url)
+
+        assert response.status_code == 200
+        assert response['Content-Disposition'].split("'")[-1] == "sourceTest.txt"
+
+        if os.path.isfile(solver.source_path.path):
+            os.remove(solver.source_path.path)
 
     def test_get_solver_file_ko(self):
-        pass
+        url = SOLVER_URL + '/' + 'unvalidPath.test'
+        response = self.client.get(url)
+        assert response.status_code == 404
