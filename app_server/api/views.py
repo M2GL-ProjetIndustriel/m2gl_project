@@ -12,6 +12,7 @@ import pathlib
 from urllib.parse import quote
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 from .models import *
 from .serializers import *
 
@@ -26,7 +27,6 @@ class CustomPagination(PageNumberPagination):
             'count': self.page.paginator.count,
             'results': data
         })
-
 
 #Same as default ordering but with sort and order parameters in place of ordering
 class CustomOrderingFilter(filters.OrderingFilter):
@@ -48,8 +48,23 @@ class CustomOrderingFilter(filters.OrderingFilter):
 def index(_):
     return HttpResponse("Hello, world. You're at the api index.")
 
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-# API views
+class TokenList(generics.ListCreateAPIView):
+    queryset = Token.objects.all()
+    serializer_class = TokenSerializer
+
+
+class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    queryset = Solver.objects.all()
+    serializer_class = SolverSerializer
+
+# API views
 class InstanceList(generics.ListCreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
