@@ -12,9 +12,10 @@ import os.path
 import pathlib
 from urllib.parse import quote
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.authtoken.models import Token
 from rest_framework.renderers import JSONRenderer
+import pdb
 from .models import *
 from .serializers import *
 
@@ -51,13 +52,15 @@ def index(_):
     return HttpResponse("Hello, world. You're at the api index.")
 
 class UserInfo(APIView):
-    #authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     #permission_classes = (IsAdminUser,)
+    permission_classes = (AllowAny,)
     renderer_classes = (JSONRenderer, )
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         try:
-            token_key = self.request.query_params.get('token', None)
+            #token_key = self.request.query_params.get('token')
+            token_key = kwargs['token']
             token = Token.objects.get(key=token_key)
             # retrieve user corresponding to token
             user = token.user
@@ -71,7 +74,7 @@ class UserInfo(APIView):
         except Exception:
             raise Http404('Invalid token.')
 
-        return(response(data))
+        return(Response(data))
 
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
