@@ -63,6 +63,7 @@ class SolverPostTest(APITestCase):
 
         assert solver.name == self.data['name']
         assert solver.version == self.data['version']
+        assert solver.owner.id == self.user.id
         assert os.path.isfile(solver.source_path.path)
         assert os.path.isfile(solver.executable_path.path)
 
@@ -114,6 +115,10 @@ class SolverPostTest(APITestCase):
 
 
 class SolverGetTest(APITestCase):
+    data = {
+        'name': 'choco',
+        'version': '2.0',
+    }
 
     def setUp(self):
         token_authentification(self)
@@ -125,14 +130,14 @@ class SolverGetTest(APITestCase):
 
     @pytest.mark.django_db()
     def test_get_solver_detail_ok(self):
-        solver = Solver.objects.create(name='choco', version='v2.0')
-        url = SOLVER_URL + '/' + str(solver.id)
+        solver = self.client.post(SOLVER_URL, self.data)
+        url = SOLVER_URL + '/' + str(solver.data['id'])
         response = self.client.get(url)
         assert response.status_code == 200
         data = response.data
 
         assert data['name'] == 'choco'
-        assert data['version'] == 'v2.0'
+        assert data['version'] == '2.0'
 
     def test_get_solver_detail_ko(self):
         url = 'api/solver/10'
@@ -142,8 +147,9 @@ class SolverGetTest(APITestCase):
     @pytest.mark.django_db()
     def test_get_solver_file_ok(self):
         source_file = SimpleUploadedFile("sourceTest.txt", b"file_content")
-        solver = Solver.objects.create(name='choco', version='v2.0',
-            source_path=source_file)
+        self.data['source_path'] = source_file
+        post_response = self.client.post(SOLVER_URL, self.data)
+        solver = Solver.objects.get(id=post_response.data['id'])
 
         url = SOLVER_URL + '/' + solver.source_path.path
         response = self.client.get(url)

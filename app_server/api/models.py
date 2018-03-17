@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.dispatch import receiver
 import os.path
+from .middleware import get_request
 
 DOWNLOADS_PATH = './downloads/'
 
@@ -46,9 +47,16 @@ class Solver(models.Model):
     source_path = models.FileField(upload_to=define_path, blank=True)
     executable_path = models.FileField(upload_to=define_path, blank=True)
     description = models.CharField(max_length=400, blank=True)
+    owner = models.ForeignKey('auth.User', null=True, editable=False, on_delete=models.CASCADE)
 
     # from stackoverflow
     def save(self, *args, **kwargs):
+        """ On creation set owner """
+        user = get_request().user
+        if user and user.is_authenticated:
+            if not self.id:
+                self.owner = user
+
         """ On save, update timestamps """
         if not self.id:
             self.created = timezone.now()
@@ -118,7 +126,16 @@ class Experimentation(models.Model):
     solver = models.ForeignKey(Solver, on_delete=models.CASCADE)
     device = models.CharField(max_length=200, blank=True)
     description = models.CharField(max_length=400, blank=True)
+    owner = models.ForeignKey('auth.User', null=True, editable=False, on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        """ On creation set owner """
+        user = get_request().user
+        if user and user.is_authenticated:
+            if not self.id:
+                self.owner = user
+
+        return super(Experimentation, self).save(*args, **kwargs)
 
 class Result(models.Model):
     status = models.CharField(max_length=100)

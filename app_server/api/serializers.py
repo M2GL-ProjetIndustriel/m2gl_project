@@ -14,7 +14,8 @@ class SolverSerializer(serializers.ModelSerializer):
             'modified',
             'source_path',
             'executable_path',
-            'description'
+            'description',
+            'owner'
         )
 
 
@@ -28,7 +29,8 @@ class ExperimentationSerializer(serializers.ModelSerializer):
             'solver_parameters',
             'solver',
             'device',
-            'description'
+            'description',
+            'owner'
             )
 
 
