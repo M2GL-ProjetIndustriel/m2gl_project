@@ -2,6 +2,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, generics
 from rest_framework.decorators import permission_classes
+from django.contrib.auth.models import Permission
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,8 +12,9 @@ import os.path
 import pathlib
 from urllib.parse import quote
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authtoken.models import Token
+from rest_framework.renderers import JSONRenderer
 from .models import *
 from .serializers import *
 
@@ -48,14 +50,28 @@ class CustomOrderingFilter(filters.OrderingFilter):
 def index(_):
     return HttpResponse("Hello, world. You're at the api index.")
 
-class UserList(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserInfo(APIView):
+    #authentication_classes = (TokenAuthentication,)
+    #permission_classes = (IsAdminUser,)
+    renderer_classes = (JSONRenderer, )
 
-class TokenList(generics.ListCreateAPIView):
-    queryset = Token.objects.all()
-    serializer_class = TokenSerializer
+    def get(self, request):
+        try:
+            token_key = self.request.query_params.get('token', None)
+            token = Token.objects.get(key=token_key)
+            # retrieve user corresponding to token
+            user = token.user
+            username = user.username
+            user_id = user.pk
+            # get user's permissions
+            p_list = Permission.objects.filter(user=user)
+            permissions = [ x.name for x in p_list]
+            data = { 'username': username, 'user_id': user_id, 'permissions': permissions }
 
+        except Exception:
+            raise Http404('Invalid token.')
+
+        return(response(data))
 
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)

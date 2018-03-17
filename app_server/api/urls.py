@@ -19,8 +19,8 @@ urlpatterns = [
     path('resultMeasurement', views.ResultMeasurementList.as_view()),
     path('resultMeasurement/<int:pk>', views.ResultMeasurementDetail.as_view()),
     path('token-auth', tokenviews.obtain_auth_token),
-    path('user', views.UserList.as_view()),
-    path('token', views.TokenList.as_view())
+    path('user/info/<str:token>', views.UserInfo.as_view()),
+    
 ]
 
 #create_dummy_user() # temp
