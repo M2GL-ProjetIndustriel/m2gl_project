@@ -225,7 +225,7 @@ class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class DownloadFiles(APIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def get(self, request, file_path, format=None):
         # Extract filename from path and cut the time "differentiator" (added
