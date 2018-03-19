@@ -39,17 +39,17 @@ class ExperimentationSerializer(serializers.ModelSerializer):
 class ResultMeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResultMeasurement
-        fields = ('id', 'name', 'unit')
+        fields = ('name', 'unit')
 
 
 class ResultValueSerializer(serializers.ModelSerializer):
     measurement = ResultMeasurementSerializer(read_only=True)
-    measurement_id = serializers.PrimaryKeyRelatedField(source='measurement',
+    measurement_key = serializers.PrimaryKeyRelatedField(source='measurement',
         queryset=ResultMeasurement.objects.all())
 
     class Meta:
         model = ResultValue
-        fields = ('id', 'value', 'measurement', 'measurement_id')
+        fields = ('id', 'value', 'measurement', 'measurement_key')
 
 
 class ResultSerializer(WritableNestedModelSerializer):

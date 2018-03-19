@@ -15,6 +15,8 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.authtoken.models import Token
 from rest_framework.renderers import JSONRenderer
+from rest_framework import status
+from rest_framework.response import Response
 import pdb
 from .models import *
 from .serializers import *
@@ -51,6 +53,7 @@ class CustomOrderingFilter(filters.OrderingFilter):
 def index(_):
     return HttpResponse("Hello, world. You're at the api index.")
 
+
 class UserInfo(APIView):
     authentication_classes = (TokenAuthentication,)
     #permission_classes = (IsAdminUser,)
@@ -76,12 +79,14 @@ class UserInfo(APIView):
 
         return(Response(data))
 
+
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     queryset = Solver.objects.all()
     serializer_class = SolverSerializer
+
 
 # API views
 class InstanceList(generics.ListCreateAPIView):
@@ -97,6 +102,43 @@ class InstanceList(generics.ListCreateAPIView):
     filter_fields = ('id', 'name', 'instance_type', 'instance_family', 'path')
     ordering_fields = '__all__'
     ordering = ('id',)
+
+    """
+    Create a new feature if feature name doesn't already exist and add
+    feature_key in the request.
+    """
+    def post(self, request, *args, **kwargs):
+        new_data = request.data.copy()
+
+        #Check if features are valid
+        for value in new_data['values']:
+            feature_info = value.get('feature')
+            if feature_info:
+                serializer = InstanceFeatureSerializer(data=feature_info)
+                if not serializer.is_valid():
+                    return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
+            if not feature_info and not value.get('feature_key'):
+                return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+        #Create new features
+        for value in new_data['values']:
+            feature_info = value.get('feature')
+            if feature_info:
+                # Create feature if the name doesn't exist.
+                feature, created = InstanceFeature.objects.get_or_create(
+                    name=feature_info.get('name'),
+                    defaults={'unit': feature_info.get('unit', "")}
+                )
+                #Add feature_key for the serializer.
+                value['feature_key'] = getattr(feature, 'name')
+
+        serializer = InstanceSerializer(data=new_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class InstanceDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -116,10 +158,10 @@ class InstanceFeatureList(generics.ListCreateAPIView):
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
         DjangoFilterBackend)
-    search_fields = ('name', 'unit', 'id')
-    filter_fields = ('name', 'unit', 'id')
+    search_fields = ('name', 'unit')
+    filter_fields = ('name', 'unit')
     ordering_fields = '__all__'
-    ordering = ('id',)
+    ordering = ('name',)
 
 
 class InstanceFeatureDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -191,6 +233,43 @@ class ResultList(generics.ListCreateAPIView):
     ordering_fields = '__all__'
     ordering = ('id',)
 
+    """
+    Create a new feature if feature name doesn't already exist and add
+    feature_key in the request.
+    """
+    def post(self, request, *args, **kwargs):
+        new_data = request.data.copy()
+
+        #Check if features are valid
+        for value in new_data['values']:
+            measurement_info = value.get('measurement')
+            if measurement_info:
+                serializer = ResultMeasurementSerializer(data=measurement_info)
+                if not serializer.is_valid():
+                    return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
+            if not measurement_info and not value.get('measurement_key'):
+                return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+        #Create new features
+        for value in new_data['values']:
+            measurement_info = value.get('measurement')
+            if measurement_info:
+                # Create feature if the name doesn't exist.
+                measurement, created = ResultMeasurement.objects.get_or_create(
+                    name=measurement_info.get('name'),
+                    defaults={'unit': measurement_info.get('unit', "")}
+                )
+                #Add feature_key for the serializer.
+                value['measurement_key'] = getattr(measurement, 'name')
+
+        serializer = ResultSerializer(data=new_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -209,10 +288,10 @@ class ResultMeasurementList(generics.ListCreateAPIView):
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
         DjangoFilterBackend)
-    search_fields = ('name', 'unit', 'id')
-    filter_fields = ('name', 'unit', 'id')
+    search_fields = ('name', 'unit')
+    filter_fields = ('name', 'unit')
     ordering_fields = '__all__'
-    ordering = ('id',)
+    ordering = ('name',)
 
 
 class ResultMeasurementDetail(generics.RetrieveUpdateDestroyAPIView):

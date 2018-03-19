@@ -118,7 +118,6 @@ def auto_delete_file_on_update(sender, instance, **kwargs):
     delete_old_file(instance.executable_path, instance.old_executable_path)
 
 
-# TODO add User
 class Experimentation(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
@@ -143,7 +142,7 @@ class Result(models.Model):
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
 
 class ResultMeasurement(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     unit = models.CharField(max_length=100, blank=True)
 
 
