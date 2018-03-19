@@ -63,17 +63,17 @@ class ResultSerializer(WritableNestedModelSerializer):
 class InstanceFeatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = InstanceFeature
-        fields = ('id', 'name', 'unit')
+        fields = ('name', 'unit')
 
 
 class InstanceValueSerializer(serializers.ModelSerializer):
     feature = InstanceFeatureSerializer(read_only=True)
-    feature_id = serializers.PrimaryKeyRelatedField(source='feature',
+    feature_key = serializers.PrimaryKeyRelatedField(source='feature',
         queryset=InstanceFeature.objects.all())
 
     class Meta:
         model = InstanceValue
-        fields = ('id', 'value', 'feature', 'feature_id')
+        fields = ('id', 'value', 'feature', 'feature_key')
 
 
 class InstanceSerializer(WritableNestedModelSerializer):

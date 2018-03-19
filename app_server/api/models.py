@@ -14,7 +14,7 @@ class Instance(models.Model):
 
 
 class InstanceFeature(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     unit = models.CharField(max_length=100, blank=True)
 
 
