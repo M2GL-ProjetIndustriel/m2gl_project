@@ -103,6 +103,7 @@ class InstanceList(generics.ListCreateAPIView):
     ordering_fields = '__all__'
     ordering = ('id',)
 
+
     """
     Create a new feature if feature name doesn't already exist and add
     feature_key in the request.
@@ -114,9 +115,10 @@ class InstanceList(generics.ListCreateAPIView):
         for value in new_data['values']:
             feature_info = value.get('feature')
             if feature_info:
-                serializer = InstanceFeatureSerializer(data=feature_info)
-                if not serializer.is_valid():
-                    return Response(serializer.errors,
+                name = feature_info.get('name')
+                unit = feature_info.get('unit')
+                if len(name) > 100 or len(name) <= 0 or len(unit) > 100:
+                    return Response("Invalid name or unit",
                         status=status.HTTP_400_BAD_REQUEST)
             if not feature_info and not value.get('feature_key'):
                 return Response(serializer.errors,
@@ -243,10 +245,11 @@ class ResultList(generics.ListCreateAPIView):
         #Check if features are valid
         for value in new_data['values']:
             measurement_info = value.get('measurement')
-            if measurement_info:
-                serializer = ResultMeasurementSerializer(data=measurement_info)
-                if not serializer.is_valid():
-                    return Response(serializer.errors,
+            if measurement_info :
+                name = measurement_info.get('name')
+                unit = measurement_info.get('unit')
+                if len(name) > 100 or len(name) <= 0 or len(unit) > 100:
+                    return Response("Invalid name or unit",
                         status=status.HTTP_400_BAD_REQUEST)
             if not measurement_info and not value.get('measurement_key'):
                 return Response(serializer.errors,
