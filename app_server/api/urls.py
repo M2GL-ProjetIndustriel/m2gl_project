@@ -20,8 +20,4 @@ urlpatterns = [
     path('resultMeasurement/<int:pk>', views.ResultMeasurementDetail.as_view()),
     path('token-auth', tokenviews.obtain_auth_token),
     path('user/info/<str:token>', views.UserInfo.as_view()),
-    
 ]
-
-#create_dummy_user() # temp
-init_tokens()

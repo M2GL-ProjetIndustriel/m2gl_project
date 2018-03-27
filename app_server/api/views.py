@@ -33,18 +33,20 @@ class CustomPagination(PageNumberPagination):
             'results': data
         })
 
-#Same as default ordering but with sort and order parameters in place of ordering
+# Same as default ordering but with sort and order parameters in place of ordering
+
+
 class CustomOrderingFilter(filters.OrderingFilter):
     def get_ordering(self, request, queryset, view):
         default_ordering = "%s" % (getattr(view, 'ordering', ''),)
         sort = request.query_params.get('sort', default_ordering)
         order = request.query_params.get('order', '')
 
-        #Add an ordering parameters to the query
+        # Add an ordering parameters to the query
         mutable = request.query_params._mutable
         request.query_params._mutable = True
         request.query_params['ordering'] = ('-' + sort if order == 'desc'
-            else sort)
+                                            else sort)
         request.query_params._mutable = mutable
 
         return super().get_ordering(request, queryset, view)
@@ -70,14 +72,22 @@ class UserInfo(APIView):
             username = user.username
             user_id = user.pk
             # get user's permissions
-            p_list = Permission.objects.filter(user=user)
-            permissions = [ x.name for x in p_list]
-            data = { 'username': username, 'user_id': user_id, 'permissions': permissions }
-
+            user_permissions = self.get_user_permissions(user)
+            data = {
+                'username': username,
+                'user_id': user_id,
+                'permission': user_permissions,
+                'token': token_key
+            }
+            return Response(data)
         except Exception:
             raise Http404('Invalid token.')
 
-        return(Response(data))
+
+    def get_user_permissions(self, user):
+        if user.is_superuser:
+            return "admin"
+        return "user"
 
 
 class SolverDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -97,21 +107,21 @@ class InstanceList(generics.ListCreateAPIView):
     serializer_class = InstanceSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
-        DjangoFilterBackend)
+                       DjangoFilterBackend)
     search_fields = ('id', 'name', 'instance_type', 'instance_family', 'path')
     filter_fields = ('id', 'name', 'instance_type', 'instance_family', 'path')
     ordering_fields = '__all__'
     ordering = ('id',)
 
-
     """
     Create a new feature if feature name doesn't already exist and add
     feature_key in the request.
     """
+
     def post(self, request, *args, **kwargs):
         new_data = request.data.copy()
 
-        #Check if features are valid
+        # Check if features are valid
         for value in new_data['values']:
             feature_info = value.get('feature')
             if feature_info:
@@ -119,12 +129,12 @@ class InstanceList(generics.ListCreateAPIView):
                 unit = feature_info.get('unit')
                 if len(name) > 100 or len(name) <= 0 or len(unit) > 100:
                     return Response("Invalid name or unit",
-                        status=status.HTTP_400_BAD_REQUEST)
+                                    status=status.HTTP_400_BAD_REQUEST)
             if not feature_info and not value.get('feature_key'):
                 return Response(serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_400_BAD_REQUEST)
 
-        #Create new features
+        # Create new features
         for value in new_data['values']:
             feature_info = value.get('feature')
             if feature_info:
@@ -133,7 +143,7 @@ class InstanceList(generics.ListCreateAPIView):
                     name=feature_info.get('name'),
                     defaults={'unit': feature_info.get('unit', "")}
                 )
-                #Add feature_key for the serializer.
+                # Add feature_key for the serializer.
                 value['feature_key'] = getattr(feature, 'name')
 
         serializer = InstanceSerializer(data=new_data)
@@ -159,7 +169,7 @@ class InstanceFeatureList(generics.ListCreateAPIView):
     serializer_class = InstanceFeatureSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
-        DjangoFilterBackend)
+                       DjangoFilterBackend)
     search_fields = ('name', 'unit')
     filter_fields = ('name', 'unit')
     ordering_fields = '__all__'
@@ -182,9 +192,9 @@ class SolverList(generics.ListCreateAPIView):
     serializer_class = SolverSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
-        DjangoFilterBackend)
+                       DjangoFilterBackend)
     search_fields = ('id', 'name', 'version', 'created', 'modified',
-        'source_path', 'executable_path')
+                     'source_path', 'executable_path')
     filter_fields = ('id', 'name', 'version', 'created', 'modified')
     ordering_fields = '__all__'
     ordering = ('id',)
@@ -206,7 +216,7 @@ class ExperimentationList(generics.ListCreateAPIView):
     serializer_class = ExperimentationSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
-        DjangoFilterBackend)
+                       DjangoFilterBackend)
     search_fields = ('date', 'device', 'id', 'name', 'solver_parameters')
     filter_fields = ('date', 'device', 'id', 'name', 'solver_parameters')
     ordering_fields = '__all__'
@@ -229,7 +239,7 @@ class ResultList(generics.ListCreateAPIView):
     serializer_class = ResultSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
-        DjangoFilterBackend)
+                       DjangoFilterBackend)
     search_fields = ('status', 'id')
     filter_fields = ('status', 'id')
     ordering_fields = '__all__'
@@ -239,23 +249,24 @@ class ResultList(generics.ListCreateAPIView):
     Create a new feature if feature name doesn't already exist and add
     feature_key in the request.
     """
+
     def post(self, request, *args, **kwargs):
         new_data = request.data.copy()
 
-        #Check if features are valid
+        # Check if features are valid
         for value in new_data['values']:
             measurement_info = value.get('measurement')
-            if measurement_info :
+            if measurement_info:
                 name = measurement_info.get('name')
                 unit = measurement_info.get('unit')
                 if len(name) > 100 or len(name) <= 0 or len(unit) > 100:
                     return Response("Invalid name or unit",
-                        status=status.HTTP_400_BAD_REQUEST)
+                                    status=status.HTTP_400_BAD_REQUEST)
             if not measurement_info and not value.get('measurement_key'):
                 return Response(serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_400_BAD_REQUEST)
 
-        #Create new features
+        # Create new features
         for value in new_data['values']:
             measurement_info = value.get('measurement')
             if measurement_info:
@@ -264,7 +275,7 @@ class ResultList(generics.ListCreateAPIView):
                     name=measurement_info.get('name'),
                     defaults={'unit': measurement_info.get('unit', "")}
                 )
-                #Add feature_key for the serializer.
+                # Add feature_key for the serializer.
                 value['measurement_key'] = getattr(measurement, 'name')
 
         serializer = ResultSerializer(data=new_data)
@@ -290,7 +301,7 @@ class ResultMeasurementList(generics.ListCreateAPIView):
     serializer_class = ResultMeasurementSerializer
     pagination_class = CustomPagination
     filter_backends = (CustomOrderingFilter, filters.SearchFilter,
-        DjangoFilterBackend)
+                       DjangoFilterBackend)
     search_fields = ('name', 'unit')
     filter_fields = ('name', 'unit')
     ordering_fields = '__all__'
